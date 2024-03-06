@@ -1,6 +1,5 @@
 """This is the main file for the application."""
-from flask import Flask, render_template, request, redirect, url_for, flash, send_from_directory
-
+from flask import Flask, render_template
 app = Flask(__name__)
 
 app.secret_key = 'Netcompany123'
