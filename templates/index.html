@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://unpkg.com/@picocss/pico@1.*/css/pico.min.css">
+  <title>Welcome to my page!</title>
+</head>
+
+<body>
+
+  <main class="container">
+    <h1 >Math Master</h1>
+    <div class="grid">
+      <p>Here you'll find the latest news</p>
+    </div>
+
+  <progress value="100" max="100"></progress>
+  <div>
+    {% for entry in news %}
+    <div>
+      <article>
+        <hgroup>
+          <h2>{{ entry[1] }}</h2>
+        <p>{{ entry[2] }}, {{ entry[4] }}</p>
+        </hgroup>
+        <p> {{ entry[3] }}</p>
+      </article>
+    </div>
+    {% endfor %}
+  </div>
+
+  <progress value="100" max="100"></progress>
+  </main>
+</body>
+
+</html>
