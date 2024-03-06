@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en" data-theme="dark">
+<html lang="en" data-theme="light">
 
 <head>
   <meta charset="utf-8">
@@ -13,8 +13,15 @@
   <main class="container">
     <h1 >Math Master</h1>
     <div class="grid">
-      <p>Here you'll find the latest news</p>
+      <p>Math learning tool</p>
     </div>
+
+    <section id="modal">
+      <h2>Grade</h2>
+      <button class="contrast" data-target="modal-example" onclick="toggleModal(event)">
+        New math problem
+      </button>
+    </section>
 
   <progress value="100" max="100"></progress>
   <div>
@@ -31,8 +38,26 @@
     {% endfor %}
   </div>
 
-  <progress value="100" max="100"></progress>
+  <dialog id="modal-example">
+    <article>
+      <header>
+        <h3>Problem</h3>
+      </header>
+      <p>
+        click Submit to enter your answer
+      </p>
+      <footer>
+        <form role="submit">
+          <input name="submit" type="search" placeholder="answer" />
+          <input type="submit" value="submit" />
+        </form>
+      </footer>
+    </article>
+  </dialog>
+
   </main>
+
+  <script src="{{ url_for('static', filename='modal.js') }}"></script>
 </body>
 
 </html>
