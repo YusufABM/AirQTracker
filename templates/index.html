@@ -1,43 +1,27 @@
 <!doctype html>
-<html lang="en" data-theme="light">
+<html lang="en" data-theme="dark">
 
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" href="https://unpkg.com/@picocss/pico@1.*/css/pico.min.css">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/animatedborder.css') }}">
   <title>Welcome to my page!</title>
 </head>
 
 <body>
-
-  <main class="container">
-    <h1 style="text-align: center;">Math Master </h1>
-      <h2  id="score1" style="text-align: center;"></h2>
-
-    <section id="modal">
-      <button class="contrast" data-target="modal-example" onclick="toggleModal(event)">
-        Start
-      </button>
-    </section>
-
-  <dialog id="modal-example">
-    <article>
-      <header>
-        <h3  id="score" style="text-align: center;"></h3>
-      </header>
+  <main class="card">
+    <div class="container">
+    <h1 >Math Master </h1>
+      <h2  id="score" style="text-align: center;"></h2>
       <div id="problem" style="font-size: 2em; text-align: center;"></div>
       <footer>
         <form id="input">
-          <input name="answer" type="number" step="0.01" placeholder="answer" autocomplete="off" required/>
-          <input type="submit" value="Submit" class="contrast"/>
+          <input name="answer" type="number" step="0.01" placeholder="ANSWER" autocomplete="off" required/>
+          <button type="submit" class="button">ENTER</button>
       </form>
       </footer>
-    </article>
-  </dialog>
-
+    </div>
   </main>
   <script src="{{ url_for('static', filename='script.js') }}"></script>
-  <script src="{{ url_for('static', filename='modal.js') }}"></script>
 </body>
 
 </html>

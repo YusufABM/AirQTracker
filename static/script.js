@@ -6,7 +6,6 @@ let currentProblem = generateProblem();
 // Initialize the score and display it
 let score = 0;
 document.getElementById('score').textContent = `Score: ${score}`;
-document.getElementById('score1').textContent = `Score: ${score}`;
 
 document.querySelector('form').addEventListener('submit', function(event) {
     event.preventDefault();  // Prevent the form from being submitted in the traditional way
@@ -28,7 +27,6 @@ document.querySelector('form').addEventListener('submit', function(event) {
     }
     // Update the score
     document.getElementById('score').textContent = `Score: ${score}`;
-    document.getElementById('score1').textContent = `Score: ${score}`;
 
     // Generate a new problem
     currentProblem = generateProblem();
