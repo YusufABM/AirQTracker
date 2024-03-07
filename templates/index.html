@@ -11,52 +11,32 @@
 <body>
 
   <main class="container">
-    <h1 >Math Master</h1>
-    <div class="grid">
-      <p>Math learning tool</p>
-    </div>
+    <h1 style="text-align: center;">Math Master </h1>
+      <h2  id="score1" style="text-align: center;"></h2>
 
     <section id="modal">
-      <h2>Grade</h2>
       <button class="contrast" data-target="modal-example" onclick="toggleModal(event)">
-        New math problem
+        Start
       </button>
     </section>
-
-  <progress value="100" max="100"></progress>
-  <div>
-    {% for entry in news %}
-    <div>
-      <article>
-        <hgroup>
-          <h2>{{ entry[1] }}</h2>
-        <p>{{ entry[2] }}, {{ entry[4] }}</p>
-        </hgroup>
-        <p> {{ entry[3] }}</p>
-      </article>
-    </div>
-    {% endfor %}
-  </div>
 
   <dialog id="modal-example">
     <article>
       <header>
-        <h3>Problem</h3>
+        <h3  id="score" style="text-align: center;"></h3>
       </header>
-      <p>
-        click Submit to enter your answer
-      </p>
+      <div id="problem" style="font-size: 2em; text-align: center;"></div>
       <footer>
-        <form role="submit">
-          <input name="submit" type="search" placeholder="answer" />
-          <input type="submit" value="submit" />
-        </form>
+        <form id="input">
+          <input name="answer" type="number" step="0.01" placeholder="answer" autocomplete="off" required/>
+          <input type="submit" value="Submit" class="contrast"/>
+      </form>
       </footer>
     </article>
   </dialog>
 
   </main>
-
+  <script src="{{ url_for('static', filename='script.js') }}"></script>
   <script src="{{ url_for('static', filename='modal.js') }}"></script>
 </body>
 
