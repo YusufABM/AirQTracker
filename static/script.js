@@ -3,9 +3,12 @@
 // Generate the first problem
 let currentProblem = generateProblem();
 
+
 // Initialize the score and display it
 let score = 0;
 document.getElementById('score').textContent = `Score: ${score}`;
+let scoreElement = document.getElementById('score');
+let cardElement = document.getElementById('card');
 
 document.querySelector('form').addEventListener('submit', function(event) {
     event.preventDefault();  // Prevent the form from being submitted in the traditional way
@@ -18,12 +21,22 @@ document.querySelector('form').addEventListener('submit', function(event) {
 
     if (checkAnswer(answer)) {
         score++;
+        scoreElement.classList.add('correct');
+
+        // Remove the class after the animation completes
+        setTimeout(() => {
+        scoreElement.classList.remove('correct');
+        }, 1000); // 1000ms = 1s, which is the duration of the animation
 
     }else {
         score--;
         if (score < 0) {
             score = 0;
         }
+        cardElement.classList.add('wrong');
+        setTimeout(() => {
+          cardElement.classList.remove('wrong');
+        }, 300); // 500ms = 0.5s, which is the duration of the animation
     }
     // Update the score
     document.getElementById('score').textContent = `Score: ${score}`;
