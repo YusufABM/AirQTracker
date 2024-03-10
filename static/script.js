@@ -88,10 +88,8 @@ function checkAnswer(data) {
     correctAnswer = parseFloat(correctAnswer.toFixed(2));
 
     if(studentAnswer === correctAnswer) {
-        console.log(studentAnswer, correctAnswer, 'Correct!');
         return true;
     } else {
-        console.log(studentAnswer, correctAnswer, 'Wrong!');
         return false;
     }
 };
