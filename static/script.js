@@ -89,13 +89,9 @@ function checkAnswer(data) {
 
     if(studentAnswer === correctAnswer) {
         console.log(studentAnswer, correctAnswer, 'Correct!');
-        //document.getElementById('feedback').textContent = 'Correct!';
-        //currentProblem = generateProblem();
         return true;
     } else {
-        //document.getElementById('feedback').textContent = 'Wrong!';
         console.log(studentAnswer, correctAnswer, 'Wrong!');
-        //currentProblem = generateProblem();
         return false;
     }
 };
