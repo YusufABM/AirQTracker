@@ -9,7 +9,7 @@ app.config['SECRET_KEY'] = 'Netcompany123'
 @app.route('/')
 def main():
     """Main route for the application"""
-    return render_template('index.html')
+    return render_template('index.html', broker ="myggen.moo.com", port="8093")
 
 if __name__ == '__main__':
     app.run(debug=True)
