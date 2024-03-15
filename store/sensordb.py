@@ -8,9 +8,19 @@ class Database:
         self.cursor = self.conn.cursor()
         self.create_table()
 
+    def create_table(self):
+        """
+        Create a table in the database to store sensor data.
+        """
+        self.cursor.execute('''CREATE TABLE IF NOT EXISTS sensor_data (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    eCO2_value INTEGER,
+                    TVOC_value INTEGER,
+                    timestamp DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL
+                    )''')
+        self.conn.commit()
+
     def insert_data(self, payload):
-      timestamp = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-      topic = 'sensor_data'
-      qos = 1
-      self.cursor.execute("INSERT INTO mqtt_data (timestamp, topic, payload, qos) VALUES (?, ?, ?, ?)", (timestamp, topic, json.dumps(payload), qos))
-      self.conn.commit()
+        timestamp = datetime.datetime.now().strftime('%H:%M:%S')
+        self.cursor.execute("INSERT INTO sensor_data (eCO2_value, TVOC_value, timestamp) VALUES (?, ?, ?)", (payload['eCO2_value'], payload['TVOC_value'], timestamp))
+        self.conn.commit()
