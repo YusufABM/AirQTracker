@@ -1,17 +1,12 @@
-"""
-A demo of subscribing to MQTT using the Paho MQTT client and TLS,
-with login details stored in a JSON file
-"""
+"""Encapsulates the connection information for MQTT,
+and provides a method to retrieve the secrets."""
 from dataclasses import dataclass
-import getpass
-import json
 import os
 import os.path
+import getpass
+import json
 import random
-import signal
 import ssl
-import sys
-
 
 from paho.mqtt import client as mqtt_client
 
@@ -53,83 +48,26 @@ class ConnectionInfo:
                 setattr(self, key, value)
 
 
-
-def create_mqtt_client(conn_info: ConnectionInfo) -> mqtt_client.Client:
-    """
-    Creates an MQTT client and sets up the necessary callbacks and connection parameters.
-
-    Args:
-        conn_info (ConnectionInfo): An object containing the connection information.
-
-    Returns:
-        mqtt_client.Client: The created MQTT client.
-
-    """
-    def on_connect(client, _user_data, _flags, return_code, _properties):
-        if return_code == 0:
-            print(f"Connected to {conn_info.broker}")
-            client.subscribe(conn_info.topic)
-        else:
-            print(f"Failed to connect, return code {return_code}")
-
-    def on_message(_client, _userdata, msg):
-        print(f"Message received [{msg.topic}]: {json.loads(msg.payload)}")
-
-    client = mqtt_client.Client(callback_api_version=mqtt_client.CallbackAPIVersion.VERSION2,
-                                client_id=f"python-mqtt-sub-{random.randint(0, 4095)}")
-    client.username_pw_set(conn_info.user_name, conn_info.password)
-    client.tls_set(tls_version=ssl.PROTOCOL_TLSv1_2, cert_reqs=ssl.CERT_NONE)
-    client.on_connect = on_connect
-    client.on_message = on_message
-    client.connect(conn_info.broker, conn_info.port)
-    return client
-
-
-def run(client: mqtt_client.Client) -> None:
-    """Start the client and run it forever until ctrl-c
-
-    Args:
-        client (mqtt_client.Client): the MQTT client
-    """
-     # function to handle incoming messages
-    def on_message(client, userdata, message):
-        print(f"Received message '{message.payload}' on topic '{message.topic}' with QoS {message.qos}")
-
-    client.on_message = on_message
-
-
-    # function to handle ctrl-c
-    def signal_handler(_sig, _frame):
-        print("You pressed Ctrl+C!")
-        client.disconnect()
-        sys.exit(0)
-
-    # register the signal handlers
-    signal.signal(signal.SIGINT, signal_handler)
-
-    # start the client and run it until ctrl-c
-    client.loop_forever()
-
-
-def get_secrets(conn_info: ConnectionInfo):
+def get_secrets(conn_info: ConnectionInfo, root_file: str = __file__) -> ConnectionInfo:
     """
     Retrieves the MQTT connection secrets from a secrets file or prompts the user to enter them.
 
     Args:
         conn_info (ConnectionInfo): An instance of the ConnectionInfo class
         that holds the connection information.
+        root_file (str, optional): The path to the Python file that calls this function.
 
     Returns:
         ConnectionInfo: The updated connection_info object with the retrieved or entered secrets.
     """
 
     # get the path to this Python file
-    root_dir = os.path.abspath(os.path.dirname(__file__))
+    root_dir = os.path.abspath(os.path.dirname(root_file))
     # get the name of this Python file without the .py extension
-    this_file = os.path.basename(__file__)[:-3]
+    this_file = os.path.basename(root_file)[:-3]
     # create the path to the secrets file, one level up from this file
     secrets_file = os.path.join(
-        root_dir, f"../secrets/{this_file}_secrets.json")
+        root_dir, f"../../secrets/{this_file}_secrets.json")
 
     # load secrets from file if it exists
     if os.path.exists(secrets_file):
@@ -137,15 +75,25 @@ def get_secrets(conn_info: ConnectionInfo):
             conn_info.update(json.load(f))
     else:
         # otherwise ask for them
-        conn_info.user_name = input("Username: ")
-        conn_info.password = getpass.getpass("Password:  ")
-        conn_info.topic = input("Topic: ")
+        if not conn_info.broker:
+            conn_info.broker = input("Broker: ")
+        if not conn_info.port:
+            temp_port: int = 0
+            while temp_port < 1 or temp_port > 65535:
+                temp_port = int(input("Port: "))
+            conn_info.port = temp_port
+        if not conn_info.user_name:
+            conn_info.user_name = input("Username: ")
+        if not conn_info.password:
+            conn_info.password = getpass.getpass("Password:  ")
+        if not conn_info.topic:
+            conn_info.topic = input("Topic: ")
         save_secrets = input("Save secrets? [y/N]: ")
         # save secrets to file if user wants to
         if save_secrets.lower() == 'y':
             # create the secrets folder if it doesn't exist
-            if not os.path.exists(os.path.join(root_dir, "../secrets")):
-                os.mkdir(os.path.join(root_dir, "../secrets"))
+            if not os.path.exists(os.path.join(root_dir, "../../secrets")):
+                os.mkdir(os.path.join(root_dir, "../../secrets"))
             # save the secrets to file
             with open(secrets_file, 'w', encoding='utf8') as f:
                 json.dump(conn_info.__dict__, f, indent=4)
@@ -153,8 +101,48 @@ def get_secrets(conn_info: ConnectionInfo):
     return conn_info
 
 
-if __name__ == "__main__":
-    connection_info = ConnectionInfo(broker='myggen.mooo.com', port=8883)
-    connection_info = get_secrets(connection_info)
+def create_mqtt_client(conn_info: ConnectionInfo,
+                       on_connect: callable = NotImplemented,
+                       on_message: callable = NotImplemented) -> mqtt_client.Client:
+    """
+    Creates an MQTT client with the given connection information.
 
-    run(create_mqtt_client(connection_info))
+    Args:
+        conn_info (ConnectionInfo): The connection information for the MQTT broker.
+        on_connect (callable, optional):
+            The callback function to be called when the client connects to the broker.
+            Defaults to NotImplemented, in which case a local default function is used.
+        on_message (callable, optional):
+            The callback function to be called when a message is received.
+            Defaults to NotImplemented, in which case a local default function is used.
+
+    Returns:
+        mqtt_client.Client: The MQTT client.
+
+    """
+    def default_on_connect(_client, _user_data, _flags, return_code, _properties):
+        if return_code == 0:
+            print(f"Connected to {conn_info.broker}")
+        else:
+            print(f"Failed to connect, return code {return_code}")
+
+    def default_on_message(_client, _userdata, msg):
+        print(f"Message received [{msg.topic}]: {msg.payload}")
+
+    client = mqtt_client.Client(callback_api_version=mqtt_client.CallbackAPIVersion.VERSION2,
+                                client_id=f"python-mqtt-time-{random.randint(0, 4095)}")
+    client.username_pw_set(conn_info.user_name, conn_info.password)
+    # Thank you, Benjamin Helmer Weeke Hervit, for adding to the following line of code
+    client.tls_set(tls_version=ssl.PROTOCOL_TLSv1_2, cert_reqs=ssl.CERT_NONE)
+
+    if on_connect is NotImplemented:
+        client.on_connect = default_on_connect
+    else:
+        client.on_connect = on_connect
+    if on_message is NotImplemented:
+        client.on_message = default_on_message
+    else:
+        client.on_message = on_message
+
+    client.connect(conn_info.broker, conn_info.port)
+    return client

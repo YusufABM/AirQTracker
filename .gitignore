@@ -2,3 +2,4 @@
 .vscode/
 __pycache__/
 secrets/
+store/mqtt_data.db

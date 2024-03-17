@@ -1,9 +1,10 @@
 import datetime
 import json
 import sqlite3
+import os
+print(os.getcwd())
 
-
-class Database:
+class SensorDataSQLite3db:
     """
     A class to interact with the SQLite database
     """
@@ -32,3 +33,8 @@ class Database:
         self.cursor.execute("INSERT INTO sensor_data (eCO2_value, TVOC_value, timestamp) VALUES (?, ?, ?)",
                             (payload['eCO2_value'], payload['TVOC_value'], timestamp))
         self.conn.commit()
+
+# Run the doctests
+if __name__ == "__main__":
+    import doctest
+    doctest.testmod(verbose=True)
