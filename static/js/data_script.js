@@ -1,27 +1,49 @@
 'use strict';
 
-// Generate the first problem
-let currentProblem = generateProblem();
+const dataContainer = document.getElementById('data-container');
+const prevBtn = document.getElementById('prev-page');
+const nextBtn = document.getElementById('next-page');
+const currentPageSpan = document.getElementById('current-page');
+let cardElement = document.getElementById('card');
+let currentPage = 1;
+const itemsPerPage = 20;
 
 
-// Function to fetch new data and update the table
-function updateTable() {
-  // Fetch new data from the Python backend
-  fetch('/path/to/your/api')
+function fetchData(page) {
+  // Fetch data from the server using AJAX or fetch API,
+  // filtering for the specified page and number of items
+  // (implementation details based on your backend)
+  fetch(`/store/sensor?page=<span class="math-inline">\{page\}&limit\=</span>{itemsPerPage}`)
     .then(response => response.json())
     .then(data => {
-      // Update the table with the new data
-      document.getElementById("eCO2_min").textContent = data.eCO2.min;
-      document.getElementById("eCO2_max").textContent = data.eCO2.max;
-      document.getElementById("eCO2_latest").textContent = data.eCO2.latest;
-      document.getElementById("TVOC_min").textContent = data.TVOC.min;
-      document.getElementById("TVOC_max").textContent = data.TVOC.max;
-      document.getElementById("TVOC_latest").textContent = data.TVOC.latest;
-    });
+      populateData(data);
+      updatePagination(data.length < itemsPerPage);
+    })
+    .catch(error => console.error(error));
 }
 
-// Call the function to update the table
-updateTable();
+function populateData(data) {
+  dataContainer.innerHTML = ''; // Clear existing content
+  for (const item of data) {
+    const card = document.createElement('div');
+    card.classList.add('data-card');
+    // Build the card content using item properties (e.g., eCO2, TVOC, timestamp)
+    card.innerHTML = `
+      <h3>eCO2: ${item.eCO2_value}</h3>
+      <h3>TVOC: ${item.TVOC_value}</h3>
+      <p>Timestamp: ${item.timestamp}</p>
+    `;
+    dataContainer.appendChild(card);
+  }
+  if(date == null){
+    console.log("date is null");
+  } else {
+    console.log("date is not null");
+  }
+}
 
-// Update the table every 5 seconds
-setInterval(updateTable, 5000);
+function updatePagination(isLastPage) {
+  currentPageSpan.textContent = `Page ${currentPage}`;
+  prevBtn.disabled = currentPage === 1;
+  nextBtn.disabled = isLastPage;
+}

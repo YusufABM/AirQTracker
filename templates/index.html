@@ -4,7 +4,7 @@
 <head>
   <meta charset="utf-8">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/animatedborder.css') }}">
-  <title>Welcome to my page!</title>
+  <title>Air monitor </title>
 </head>
 
 <body>
@@ -24,22 +24,25 @@
         <tbody>
           <tr>
             <td>eCO2</td>
-            <td id="eCO2_min">9999</td>
-            <td id="eCO2_max">9999</td>
-            <td id="eCO2_latest">404</td>
+            <td id="eCO2_min"></td>
+            <td id="eCO2_max"></td>
+            <td id="eCO2_latest"></td>
           </tr>
           <tr>
             <td>TVOC</td>
-            <td id="TVOC_min">9999</td>
-            <td id="TVOC_max">9999</td>
-            <td id="TVOC_latest">7</td>
+            <td id="TVOC_min"></td>
+            <td id="TVOC_max"></td>
+            <td id="TVOC_latest"></td>
           </tr>
-        </tbody>
-      </table>
-    </div>
-  </main>
-  <script src="{{ url_for('static', filename='js/script.js') }}"></script>
-  </div>
+              </tbody>
+            </table>
+            <div class="button-container">
+              <button id="datapage" class="button">Lifetime DATA >></button>
+             </div>
+          </div>
+        </main>
+        <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+        </div>
 </body>
 
 </html>
