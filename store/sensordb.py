@@ -4,6 +4,9 @@ import sqlite3
 
 
 class Database:
+    """
+    A class to interact with the SQLite database
+    """
     def __init__(self, db_name='mqtt_data.db'):
         self.conn = sqlite3.connect(db_name)
         self.cursor = self.conn.cursor()
