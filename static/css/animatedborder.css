@@ -88,6 +88,27 @@ body {
   position: relative;
 }
 
+table {
+  width: 100%; /* Make the table fill the container width */
+  border-collapse: collapse; /* Remove borders between cells */
+}
+
+th, td {
+  padding: 10px; /* Add padding for better readability */
+  text-align: center; /* Center the text within cells */
+  border: 1px solid var(--clr-3); /* Add a thin border to each cell */
+}
+
+th { /* Style the header row */
+  background-color: var(--clr-1); /* Use the same background color as the card */
+  color: white; /* Change text color to white for better contrast */
+}
+
+td { /* Style the data rows */
+  background-color: var(--clr-2); /* Use a slightly darker background color */
+  color: white; /* Change text color to white for better contrast */
+}
+
 form {
   display: flex;
   flex-direction: column;
@@ -95,28 +116,6 @@ form {
   margin-top: 0;
 }
 
-input[type=number]::-webkit-inner-spin-button,
-input[type=number]::-webkit-outer-spin-button {
-  -webkit-appearance: none;
-  margin: 0;
-}
-
-input[type=number], input[type=password] {
-  align-self: center;
-  text-align: center;
-  background-color: var(--clr-1);
-  width: 70%;
-  padding: 10px 7px;
-  display: block;
-  border: 2px solid #000000;
-  box-sizing: border-box;
-  color: white;
-  font-family: 'Calculator', sans-serif;
-  font-size: 20px;
-  margin-top: 0px;
-  margin-bottom: 80px;
-  border-radius: 12px;
-  }
 
 h1 {
   align-self: center;

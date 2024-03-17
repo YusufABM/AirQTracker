@@ -38,30 +38,30 @@ document.querySelector('form').addEventListener('submit', function(event) {
           cardElement.classList.remove('wrong');
         }, 300); // 500ms = 0.5s, which is the duration of the animation
     }
-    // Update the score
-    document.getElementById('score').textContent = `Score: ${score}`;
-
-    // Generate a new problem
-    currentProblem = generateProblem();
-
-    // Clear the input field
-    document.querySelector('input[name="answer"]').value = '';
+    updateTable();
 });
 
-// Generate random arithmetic problem
-function generateProblem() {
-    let num1 = Math.floor(Math.random() * 10);
-    let num2 = Math.floor(Math.random() * 10);
-    let operator = ['+', '-', '*', '/'][Math.floor(Math.random() * 4)];
+// Function to fetch new data and update the table
+function updateTable() {
+    // Fetch new data from the Python backend
+    fetch('/store/sensor')
+      .then(response => response.json())
+      .then(data => {
+        // Update the table with the new data
+        document.getElementById("eCO2_min").textContent = data.eCO2.min;
+        document.getElementById("eCO2_max").textContent = data.eCO2.max;
+        document.getElementById("eCO2_latest").textContent = data.eCO2.latest;
+        document.getElementById("TVOC_min").textContent = data.TVOC.min;
+        document.getElementById("TVOC_max").textContent = data.TVOC.max;
+        document.getElementById("TVOC_latest").textContent = data.TVOC.latest;
+      });
+  }
 
-    // If the operator is division and num2 is 0, regenerate num2 until it's not 0
-    while (operator === '/' && num2 === 0) {
-    num2 = Math.floor(Math.random() * 10);
-    }
+  // Call the function to update the table
+  updateTable();
+  // Update the table every 5 seconds
+  setInterval(updateTable, 5000);
 
-    document.getElementById('problem').textContent = `${num1} ${operator} ${num2}`;
-    return {num1, num2, operator};
-}
 
 function checkAnswer(data) {
 

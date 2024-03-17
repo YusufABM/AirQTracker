@@ -78,14 +78,14 @@ if __name__ == "__main__":
         module to store the throw.
 
         """
-        data = json.loads(msg.payload)
-        print(f"Message received [{msg.topic}]: {data}")
+        throw = json.loads(msg.payload)
+        print(f"Message received [{msg.topic}]: {throw}")
 
-        # Ensure that 'data' is a dictionary and contains the necessary keys
-        if isinstance(data, dict) and 'eCO2_value' in data and 'TVOC_value' in data:
-          database.insert_data(data)
+        # Ensure that 'throw' is a dictionary and contains the necessary keys
+        if isinstance(throw, dict) and 'eCO2' in throw and 'TVOC' in throw:
+           database.insert_data(throw)
         else:
-          print("Invalid payload received")
+            print("Invalid payload received")
 
     run(create_mqtt_client(connection_info,
         on_connect=on_connect, on_message=on_message))

@@ -9,20 +9,36 @@
 
 <body>
   <div class="outer-container">
-  <h1>Math Master</h1>
+  <h1>Air Monitor</h1>
   <h2 id="score"></h2>
   <main class="card" id="card">
     <div class="container">
-      <div class="box">
-        <h3 id="problem"></h3>
-      </div>
-      <form id="input">
-        <input name="answer" type="number" step="0.01" placeholder="ANSWER" autocomplete="off" required/>
-        <button type="submit" class="button">ENTER</button>
-      </form>
+      <table>
+        <thead>
+          <tr>
+            <th></th> <th>MIN</th>
+            <th>MAX</th>
+            <th>LATEST</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>eCO2</td>
+            <td id="eCO2_min">9999</td>
+            <td id="eCO2_max">9999</td>
+            <td id="eCO2_latest">404</td>
+          </tr>
+          <tr>
+            <td>TVOC</td>
+            <td id="TVOC_min">9999</td>
+            <td id="TVOC_max">9999</td>
+            <td id="TVOC_latest">7</td>
+          </tr>
+        </tbody>
+      </table>
     </div>
   </main>
-  <script src="{{ url_for('static/js', filename='script.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/script.js') }}"></script>
   </div>
 </body>
 

@@ -1,38 +1,71 @@
 import datetime
-import json
 import sqlite3
-import os
-print(os.getcwd())
 
 class SensorDataSQLite3db:
-    """
-    A class to interact with the SQLite database
-    """
-    def __init__(self, db_name='mqtt_data.db'):
-        self.conn = sqlite3.connect(db_name)
-        self.cursor = self.conn.cursor()
-        self.create_table()
+    """Encapsulates the SQLite3 operations for sensor data."""
 
-    def create_table(self):
+    _DB_TABLE_NAME = "sensor_data"
+
+    _DB_CREATE_SQL = f"""
+    CREATE TABLE IF NOT EXISTS {_DB_TABLE_NAME}
+       (id INTEGER PRIMARY KEY AUTOINCREMENT,
+        eCO2_value INTEGER,
+        TVOC_value INTEGER,
+        timestamp DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL
+       )
+    """
+
+    _DB_INSERT_SQL = f"""
+    INSERT INTO {_DB_TABLE_NAME} (eCO2_value, TVOC_value) VALUES (?, ?)
+    """
+
+    _DB_SELECT_MIN_MAX_LATEST_SQL = f"""
+    SELECT MIN(eCO2_value), MAX(eCO2_value), MIN(TVOC_value), MAX(TVOC_value),
+           eCO2_value, TVOC_value
+    FROM {_DB_TABLE_NAME}
+    """
+
+    _DB_SELECT_ALL_SQL = f"""
+    SELECT * FROM {_DB_TABLE_NAME} ORDER BY timestamp DESC
+    """
+
+    def __init__(self, db_name: str) -> None:
+        """Initializes the database
+
+        Args:
+            db_name (str): the full path to the database file
         """
-        Create a table in the database to store sensor data.
-        """
-        self.cursor.execute('''CREATE TABLE IF NOT EXISTS sensor_data (
-                    id INTEGER PRIMARY KEY AUTOINCREMENT,
-                    eCO2_value INTEGER,
-                    TVOC_value INTEGER,
-                    timestamp DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL
-                    )''')
-        self.conn.commit()
+        self._db_name = db_name
+        self._conn = sqlite3.connect(db_name)  # Connection opened here
+        self.cursor = self._conn.cursor()
+        self.cursor.execute(self._DB_CREATE_SQL)
+        self._conn.commit()
 
     def insert_data(self, payload):
-        """
-        Insert sensor data into the database.
-        """
+        """Insert sensor data into the database."""
         timestamp = datetime.datetime.now().strftime('%H:%M:%S')
-        self.cursor.execute("INSERT INTO sensor_data (eCO2_value, TVOC_value, timestamp) VALUES (?, ?, ?)",
-                            (payload['eCO2_value'], payload['TVOC_value'], timestamp))
-        self.conn.commit()
+        self.cursor.execute(self._DB_INSERT_SQL, (payload['eCO2'], payload['TVOC']))
+        self._conn.commit()
+
+    def get_min_max_latest(self) -> dict:
+        """Retrieves min, max, and latest values for eCO2 and TVOC."""
+        self.cursor.execute(self._DB_SELECT_MIN_MAX_LATEST_SQL)
+        min_eCO2, max_eCO2, min_TVOC, max_TVOC, latest_eCO2, latest_TVOC = self.cursor.fetchone()
+        return {
+            'eCO2': {'min': min_eCO2, 'max': max_eCO2, 'latest': latest_eCO2},
+            'TVOC': {'min': min_TVOC, 'max': max_TVOC, 'latest': latest_TVOC}
+        }
+
+    def get_all_data(self) -> list:
+        """Retrieves all sensor data, latest first."""
+        self.cursor.execute(self._DB_SELECT_ALL_SQL)
+        return self.cursor.fetchall()
+
+    def close(self) -> None:
+        """Closes the connection to the database."""
+        self._conn.commit()
+        self._conn.close()
+
 
 # Run the doctests
 if __name__ == "__main__":
