@@ -2,6 +2,7 @@ import datetime
 import json
 import sqlite3
 
+
 class Database:
     def __init__(self, db_name='mqtt_data.db'):
         self.conn = sqlite3.connect(db_name)
@@ -21,6 +22,10 @@ class Database:
         self.conn.commit()
 
     def insert_data(self, payload):
+        """
+        Insert sensor data into the database.
+        """
         timestamp = datetime.datetime.now().strftime('%H:%M:%S')
-        self.cursor.execute("INSERT INTO sensor_data (eCO2_value, TVOC_value, timestamp) VALUES (?, ?, ?)", (payload['eCO2_value'], payload['TVOC_value'], timestamp))
+        self.cursor.execute("INSERT INTO sensor_data (eCO2_value, TVOC_value, timestamp) VALUES (?, ?, ?)",
+                            (payload['eCO2_value'], payload['TVOC_value'], timestamp))
         self.conn.commit()
