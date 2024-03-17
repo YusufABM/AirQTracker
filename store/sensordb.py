@@ -1,5 +1,7 @@
+""" This module encapsulates the SQLite3 operations for sensor data."""
 import datetime
 import sqlite3
+
 
 class SensorDataSQLite3db:
     """Encapsulates the SQLite3 operations for sensor data."""
@@ -44,16 +46,17 @@ class SensorDataSQLite3db:
     def insert_data(self, payload):
         """Insert sensor data into the database."""
         timestamp = datetime.datetime.now().strftime('%H:%M:%S')
-        self.cursor.execute(self._DB_INSERT_SQL, (payload['eCO2'], payload['TVOC']))
+        self.cursor.execute(self._DB_INSERT_SQL,
+                            (payload['eCO2'], payload['TVOC'], timestamp))
         self._conn.commit()
 
     def get_min_max_latest(self) -> dict:
         """Retrieves min, max, and latest values for eCO2 and TVOC."""
         self.cursor.execute(self._DB_SELECT_MIN_MAX_LATEST_SQL)
-        min_eCO2, max_eCO2, min_TVOC, max_TVOC, latest_eCO2, latest_TVOC = self.cursor.fetchone()
+        min_ec02, max_ec02, min_tvoc, max_tvoc, latest_ec02, latest_tvoc = self.cursor.fetchone()
         return {
-            'eCO2': {'min': min_eCO2, 'max': max_eCO2, 'latest': latest_eCO2},
-            'TVOC': {'min': min_TVOC, 'max': max_TVOC, 'latest': latest_TVOC}
+            'eCO2': {'min': min_ec02, 'max': max_ec02, 'latest': latest_ec02},
+            'TVOC': {'min': min_tvoc, 'max': max_tvoc, 'latest': latest_tvoc}
         }
 
     def get_all_data(self) -> list:

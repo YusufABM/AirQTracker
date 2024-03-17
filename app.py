@@ -43,5 +43,8 @@ def close_db_connection(exception):
     if db_instance is not None:
         db_instance.close()
 
+    if exception is not None:
+        print(f"Exception: {exception}")
+
 if __name__ == '__main__':
     app.run(debug=True)

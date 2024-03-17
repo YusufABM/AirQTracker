@@ -1,3 +1,4 @@
+"""Mqtt store data from sensor to database."""
 import json
 import os.path
 import signal
@@ -78,12 +79,12 @@ if __name__ == "__main__":
         module to store the throw.
 
         """
-        throw = json.loads(msg.payload)
-        print(f"Message received [{msg.topic}]: {throw}")
+        data = json.loads(msg.payload)
+        print(f"Message received [{msg.topic}]: {data}")
 
         # Ensure that 'throw' is a dictionary and contains the necessary keys
-        if isinstance(throw, dict) and 'eCO2' in throw and 'TVOC' in throw:
-           database.insert_data(throw)
+        if isinstance(data, dict) and 'eCO2' in data and 'TVOC' in data:
+            database.insert_data(data)
         else:
             print("Invalid payload received")
 
