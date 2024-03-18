@@ -51,7 +51,8 @@ class SensorDataSQLite3db:
     def insert_data(self, payload):
         """Insert sensor data into the database.
         >>> db = SensorDataSQLite3db('test.db')
-        >>> db.insert_data({'eCO2': 400, 'TVOC': 0, 'timestamp': '2022-01-01T00:00:00'})  # doctest: +SKIP
+        >>> db.insert_data({'eCO2': 400, 'TVOC': 0, 'timestamp': '2022-01-01T00:00:00'})
+        # doctest: +SKIP
         """
 
         timestamp = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
@@ -65,7 +66,8 @@ class SensorDataSQLite3db:
 
         >>> db = SensorDataSQLite3db('test.db')
         >>> db.get_min_max_latest()  # doctest: +SKIP
-        {'eCO2': {'min': 400, 'max': 500, 'latest': 450}, 'TVOC': {'min': 0, 'max': 10, 'latest': 5}}
+        {'eCO2': {'min': 400, 'max': 500, 'latest': 450}, 'TVOC':
+        {'min': 0, 'max': 10, 'latest': 5}}
         """
 
         self.cursor.execute(self._DB_SELECT_MIN_MAX_LATEST_SQL)

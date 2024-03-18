@@ -50,14 +50,12 @@ function fetchData(page) {
         console.warn('total_pages not provided by server. Pagination might not work as expected.');
       }
       populateData(data.data); // Assuming data object has 'data' key for actual content
-      console.log(data.total_pages); // Log the received total_pages (if available)
     })
     .catch(error => console.error(error));
 }
 
 
 function populateData(data) {
-  console.log(`Populating data: ${data}`);
   const dataContainer = document.getElementById("data-container");
   dataContainer.innerHTML = ''; // Clear existing content
 
@@ -117,9 +115,7 @@ setInterval(updateTable, 10000);
 
 
 function updatePagination(isLastPage) {
-  console.log(`Updating pagination, isLastPage: ${isLastPage}`);
   currentPageSpan.textContent = `Page ${currentPage}`;
-  console.log(currentPage==1);
   prevBtn.disabled = false;
   nextBtn.disabled = isLastPage;
 }
