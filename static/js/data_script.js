@@ -93,7 +93,7 @@ function populateData(data) {
     tvocCell.textContent = 'eCO2';
     tvocRow.appendChild(tvocCell);
     let tvocValueCell = document.createElement('td');
-    tvocValueCell.innerHTML = '<h4>' + row[0] + '</h4>'; // Use <h4> for TVOC value
+    tvocValueCell.innerHTML = '<h4>' + row[1] + '</h4>'; // Use <h4> for TVOC value
     tvocRow.appendChild(tvocValueCell);
     table.appendChild(tvocRow);
 
@@ -102,7 +102,7 @@ function populateData(data) {
     eco2Cell.textContent = 'TVOC';
     eco2Row.appendChild(eco2Cell);
     let eco2ValueCell = document.createElement('td');
-    eco2ValueCell.innerHTML = '<h4>' + row[1] + '</h4>'; // Use <h4> for eCO2 value
+    eco2ValueCell.innerHTML = '<h4>' + row[2] + '</h4>'; // Use <h4> for eCO2 value
     eco2Row.appendChild(eco2ValueCell);
     table.appendChild(eco2Row);
 
@@ -111,6 +111,9 @@ function populateData(data) {
     dataContainer.appendChild(card);
   }
 }
+
+setInterval(updateTable, 10000);
+
 
 
 function updatePagination(isLastPage) {

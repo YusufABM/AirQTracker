@@ -67,6 +67,7 @@ class SensorDataSQLite3db:
         >>> db.get_min_max_latest()  # doctest: +SKIP
         {'eCO2': {'min': 400, 'max': 500, 'latest': 450}, 'TVOC': {'min': 0, 'max': 10, 'latest': 5}}
         """
+
         self.cursor.execute(self._DB_SELECT_MIN_MAX_LATEST_SQL)
         min_ec02, max_ec02, min_tvoc, max_tvoc, latest_ec02, latest_tvoc = self.cursor.fetchone()
         return {
