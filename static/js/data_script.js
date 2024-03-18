@@ -11,64 +11,112 @@ const itemsPerPage = 20;
 // Fetch the first page of data when the page loads
 fetchData(currentPage);
 
+// Add event listeners for pagination buttons
+nextBtn.addEventListener('click', () => {
+  currentPage++;
+  fetchData(currentPage);
+});
+
+prevBtn.addEventListener('click', () => {
+  if (currentPage > 1) {
+    currentPage--;
+    fetchData(currentPage);
+  }
+});
+
+document.getElementById("backButton").addEventListener("click", function() {
+  console.log("backButton");
+  window.location.href = '/';
+});
+
+
 
 function fetchData(page) {
-  // Fetch data from the server using AJAX or fetch API,
-  // filtering for the specified page and number of items
-  // (implementation details based on your backend)
-  fetch(`/store/sensor/all`)
+  console.log(`Fetching data for page ${page}`);
+  currentPage = page;
+
+  // Calculate the offset for pagination
+  const offset = (page - 1) * itemsPerPage;
+
+  // Fetch data from the server with pagination parameters
+  fetch(`/store/sensor/all?page=${currentPage}`)
     .then(response => response.json())
     .then(data => {
       console.log(data);
-      populateData(data);
-      // updatePagination(data.length < itemsPerPage);  // Remove or modify this line
+      // **Ensure correct total_pages handling (if provided by the backend):**
+      if (data.total_pages !== undefined) {
+        updatePagination(data.total_pages === currentPage); // Update pagination based on total_pages
+      } else {
+        console.warn('total_pages not provided by server. Pagination might not work as expected.');
+      }
+      populateData(data.data); // Assuming data object has 'data' key for actual content
+      console.log(data.total_pages); // Log the received total_pages (if available)
     })
     .catch(error => console.error(error));
 }
 
+
 function populateData(data) {
-  // Clear the data container
-  dataContainer.innerHTML = '';
+  console.log(`Populating data: ${data}`);
+  const dataContainer = document.getElementById("data-container");
+  dataContainer.innerHTML = ''; // Clear existing content
 
   //Check if data is an iterable array
   if (!Array.isArray(data)) {
     console.error('Data is not an array');
     return;
   }
-  // Iterate over the rows of data
+  // Iterate over the data (assuming data is an array of arrays)
   for (let row of data) {
-    // Create a new card for each row
-    let card = document.createElement('div');
-    card.className = 'card card2';
-
-    // Parse the timestamp and format it
-    let date = new Date(row[3]);
+    // Parse the timestamp
+    let date = new Date(row[3]); // Assuming timestamp is at index 3
     let formattedTimestamp = `${date.getHours()}:${date.getMinutes()} ${date.getDate()}/${date.getMonth() + 1}`;
 
-    // Add the formatted timestamp to the card
-    let timestamp = document.createElement('h3');
-    timestamp.textContent = formattedTimestamp;
-    card.appendChild(timestamp);
+    // Create a new card element
+    let card = document.createElement('div');
+    card.className = 'card card2'; // Add a class for styling
 
-    // Add the TVOC title and value to the card
-    let tvoc = document.createElement('h4');
-    tvoc.innerHTML = '<span class="title">TVOC:</span> <span class="data">' + row[0] + '</span>';  // TVOC is the first element in the row
-    card.appendChild(tvoc);
+    // Create a table element for the data
+    let table = document.createElement('table');
 
-    // Add the eCO2 title and value to the card
-    let eco2 = document.createElement('h4');
-    eco2.innerHTML = '<span class="title">eCO2:</span> <span class="data">' + row[1] + '</span>';  // eCO2 is the second element in the row
-    card.appendChild(eco2);
+    // Create the row for the timestamp (single column)
+    let timestampRow = document.createElement('tr');
+    let timestampCell = document.createElement('td');
+    timestampCell.colSpan = 2; // Span across both columns
+    timestampCell.textContent = formattedTimestamp;
+    timestampRow.appendChild(timestampCell);
+    table.appendChild(timestampRow);
 
-    // Add the card to the data container
+    // Create data rows for TVOC and eCO2
+    let tvocRow = document.createElement('tr');
+    let tvocCell = document.createElement('td');
+    tvocCell.textContent = 'eCO2';
+    tvocRow.appendChild(tvocCell);
+    let tvocValueCell = document.createElement('td');
+    tvocValueCell.innerHTML = '<h4>' + row[0] + '</h4>'; // Use <h4> for TVOC value
+    tvocRow.appendChild(tvocValueCell);
+    table.appendChild(tvocRow);
+
+    let eco2Row = document.createElement('tr');
+    let eco2Cell = document.createElement('td');
+    eco2Cell.textContent = 'TVOC';
+    eco2Row.appendChild(eco2Cell);
+    let eco2ValueCell = document.createElement('td');
+    eco2ValueCell.innerHTML = '<h4>' + row[1] + '</h4>'; // Use <h4> for eCO2 value
+    eco2Row.appendChild(eco2ValueCell);
+    table.appendChild(eco2Row);
+
+    // Add the table to the card and the card to the container
+    card.appendChild(table);
     dataContainer.appendChild(card);
   }
 }
 
 
 function updatePagination(isLastPage) {
+  console.log(`Updating pagination, isLastPage: ${isLastPage}`);
   currentPageSpan.textContent = `Page ${currentPage}`;
-  prevBtn.disabled = currentPage === 1;
+  console.log(currentPage==1);
+  prevBtn.disabled = false;
   nextBtn.disabled = isLastPage;
-  console.log("updatePagination");
 }

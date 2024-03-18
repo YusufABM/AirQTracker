@@ -9,6 +9,7 @@ from paho.mqtt import client as mqtt_client
 from sensordb import SensorDataSQLite3db
 from connectioninfo import ConnectionInfo, get_secrets, create_mqtt_client
 
+
 def run(client: mqtt_client.Client) -> None:
     """Start the client and run it forever until ctrl-c
 
