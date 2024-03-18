@@ -21,30 +21,8 @@
   100% { background-color: initial; }
 }
 
-@keyframes shake {
-  0% { transform: translate(1px, 1px) rotate(0deg); }
-  10% { transform: translate(-1px, -2px) rotate(-1deg); }
-  20% { transform: translate(-3px, 0px) rotate(1deg); }
-  30% { transform: translate(3px, 2px) rotate(0deg); }
-  40% { transform: translate(1px, -1px) rotate(1deg); }
-  50% { transform: translate(-1px, 2px) rotate(-1deg); }
-  60% { transform: translate(-3px, 1px) rotate(0deg); }
-  70% { transform: translate(3px, 1px) rotate(-1deg); }
-  80% { transform: translate(-1px, -1px) rotate(1deg); }
-  90% { transform: translate(1px, 2px) rotate(0deg); }
-  100% { transform: translate(1px, -2px) rotate(-1deg); }
-}
-
 #score.correct {
   animation: flash 0.3s linear;
-}
-
-.card.wrong {
-  animation: shake 0.5s;
-  animation-iteration-count: 1;
-}
-.card.red {
-  animation: redflash 1s linear;
 }
 
 .outer-container {
@@ -79,6 +57,7 @@ body {
   align-self: center;
 }
 
+
 .card {
   height: 160px;
   width: 307px;
@@ -86,11 +65,14 @@ body {
   border-radius: 0.5rem;
   align-self: center;
   position: relative;
+  margin-bottom: 50px;
 }
+
 
 table {
   width: 100%; /* Make the table fill the container width */
   border-collapse: collapse; /* Remove borders between cells */
+  margin-bottom: 20px;
 }
 
 th, td {
@@ -107,13 +89,6 @@ th { /* Style the header row */
 td { /* Style the data rows */
   background-color: var(--clr-2); /* Use a slightly darker background color */
   color: white; /* Change text color to white for better contrast */
-}
-
-form {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  margin-top: 0;
 }
 
 
@@ -136,34 +111,39 @@ h2 {
   font-family: 'Calculator', sans-serif;
 }
 
-/*black box for the problem field*/
-.box{
-  width: 70%;
-  height: 50px;
-  margin: 20px ;
-  display: block;
-  border: 1px solid #ffffff;
-  box-sizing: border-box;
-  align-self: center;
-  background-color: rgb(0, 0, 0);
-  border-radius: 12px;
-
-}
-
-
 h3 {
   align-self: center;
   color: white;
   text-align: center;
-  font-size: 30px;
+  font-size: 40px;
   font-family: 'Calculator', sans-serif;
+  margin-top: 6px;
+  margin-bottom: 10px;
+}
+
+h4 {
+  align-self: center;
+  color: white;
+  text-align: left;
+  font-size: 20px;
+  font-family: 'Times New Roman', Times, serif;
   margin-top: 5px;
   margin-bottom: 4px;
 }
 
+.title {
+  font-family: 'Arial', sans-serif;
+  text-align: left;
+}
+
+.data {
+  font-family: 'Courier New', monospace;
+  text-align: center;
+}
+
 .button {
   border-radius: 12px;
-  align-self: center;
+  align-self: bottom-left;
   width: 300px;
   height: 80px;
   text-decoration: none;
@@ -187,6 +167,11 @@ h3 {
   color: white;
 }
 
+.card2 {
+  height: 160px;
+  width: 500px;
+  align-self: center;
+}
 
 .card::before,
 .card::after {
@@ -213,6 +198,7 @@ h3 {
 /* Style the data container and cards */
 .data-container {
   display: flex;
+  flex-direction: column;
   flex-wrap: wrap;
   justify-content: space-around;
   margin-top: 2rem;

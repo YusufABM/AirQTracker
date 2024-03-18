@@ -28,6 +28,13 @@ def get_db() -> SensorDataSQLite3db:
         g.db_instance = SensorDataSQLite3db(sqlite3_db)
     return g.db_instance
 
+@app.route('/store/sensor/all')
+def get_all_sensor_data():
+    """Get all sensor data"""
+    db = get_db()
+    data = db.get_all_data()
+    return jsonify(data)
+
 @app.route('/datapage')
 def datapage():
     """Route to display all sensor data"""
