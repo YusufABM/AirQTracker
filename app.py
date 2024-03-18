@@ -2,7 +2,6 @@
 import os.path
 from flask import Flask, render_template, jsonify, g, Response, request
 from store.sensordb import SensorDataSQLite3db
-import math
 
 app = Flask(__name__)
 

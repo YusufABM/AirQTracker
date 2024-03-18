@@ -21,7 +21,7 @@
   100% { background-color: initial; }
 }
 
-#score.correct {
+.flash {
   animation: flash 0.3s linear;
 }
 
